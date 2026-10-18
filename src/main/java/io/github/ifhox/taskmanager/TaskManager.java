@@ -2,10 +2,11 @@ package io.github.ifhox.taskmanager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class TaskManager{
 
-    ArrayList<Task> listOfTasks = new ArrayList<Task>();
+    private final ArrayList<Task> listOfTasks = new ArrayList<Task>();
 
     public void addTask(Task task){
         listOfTasks.add(task);
@@ -27,25 +28,15 @@ public class TaskManager{
     }
 
     public boolean idExists(int id) {
-        for (Task task : listOfTasks) {
-            if (task.getId() == id) {
-                return true;
-            }
-        }
-        return false;
+        return getTaskByID(id).isPresent();
     }
 
-    public ArrayList<Task> getTask(){
+    private final ArrayList<Task> getTask(){
         return new ArrayList<Task>(listOfTasks);
     }
 
-    public Task getTaskByID(int id){
-        for(Task task : listOfTasks){
-            if(task.getId() == id) {
-                return task;
-            }
-        }
-        return null;
+    public Optional<Task> getTaskByID(int id){
+        return listOfTasks.stream().filter(task -> task.getId() == id).findFirst();
     }
 
     public ArrayList<Task> filterByStatus(Task.Status status){
