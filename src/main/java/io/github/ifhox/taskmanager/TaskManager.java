@@ -50,9 +50,9 @@ public class TaskManager{
 
     public ArrayList<Task> filterByStatus(Task.Status status){
         ArrayList<Task> resultS = new ArrayList<Task>();
-        for(int i = 0; i < listOfTasks.size(); i++){
-            if(listOfTasks.get(i).getStatus().equals(status)){
-                resultS.add(listOfTasks.get(i));
+        for (Task listOfTask : listOfTasks) {
+            if (listOfTask.getStatus().equals(status)) {
+                resultS.add(listOfTask);
             }
         }
         return resultS;
@@ -60,9 +60,9 @@ public class TaskManager{
 
     public ArrayList<Task> filterByPriority(Task.Priority priority){
         ArrayList<Task> resultP = new ArrayList<Task>();
-        for(int i = 0; i < listOfTasks.size(); i++){
-            if(listOfTasks.get(i).getPriority().equals(priority)){
-                resultP.add(listOfTasks.get(i));
+        for (Task listOfTask : listOfTasks) {
+            if (listOfTask.getPriority().equals(priority)) {
+                resultP.add(listOfTask);
             }
         }
         return resultP;

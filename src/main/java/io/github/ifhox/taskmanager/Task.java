@@ -1,6 +1,7 @@
 package io.github.ifhox.taskmanager;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Task  {
 
@@ -13,11 +14,10 @@ public class Task  {
     public enum Status {
         PENDING,
         IN_PROGRESS,
-        COMPLETE,
-        OVERDUE
+        COMPLETE
     }
 
-    private int id;
+    private final int id;
     private String title;
     private LocalDate dueDate;
     private Status status;
@@ -25,18 +25,27 @@ public class Task  {
 
     public Task (int id, String title, LocalDate dueDate, Priority priority, Status status){
         this.id = id;
-        this.title = title;
+        this.title = requireValidTitle(title);
         this.dueDate = dueDate;
-        this.priority = priority;
-        this.status = status;
+        this.status = Objects.requireNonNull(status, "status");
+        this.priority = Objects.requireNonNull(priority, "priority");
+    }
+
+    private static String requireValidTitle(String title){
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("The task title cannot be empty");
+        }
+        return title.trim();
+    }
+
+    public boolean isOverdue() {
+        LocalDate today = LocalDate.now();
+        if(dueDate == null || !dueDate.isBefore(today)){ return false;
+        } else return status != Status.COMPLETE;
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -44,7 +53,7 @@ public class Task  {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = requireValidTitle(title);
     }
 
     public LocalDate getDueDate() {
@@ -60,7 +69,7 @@ public class Task  {
     }
 
     public void setStatus(Status status){
-        this.status = status;
+        this.status = Objects.requireNonNull(status, "status");
     }
 
     public Priority getPriority() {
@@ -68,11 +77,29 @@ public class Task  {
     }
 
     public void setPriority(Priority priority) {
-        this.priority = priority;
+        this.priority = Objects.requireNonNull(priority, "priority");
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
     public String toString() {
+        if(!(dueDate == null)){
             return this.id + ". " + this.priority + ": " + this.title + ". due on: " + this.dueDate + ". status: "
                     + getStatus();
+        } else {
+            return this.id + ". " + this.priority + ": " + this.title + ". No due date. status: "
+                    + getStatus();
+        }
     }
 }
